@@ -20,15 +20,19 @@ let rec noDecreasingNumbers (numbers: int list) =
     | a::b::_ when a > b -> false
     | _::b::tail -> noDecreasingNumbers (b::tail)
     | _ -> true
+    
+let noLargerGroup (numbers: int list) =
+    numbers |> List.groupBy (fun n -> n)
+            |> List.exists (fun (_, values) -> values.Length = 2)
 
 [<EntryPoint>]
 let main argv =
     
     let input = [123257..647015]
-//    let input = [111111;223450;123789;224553]
     
     let matchingNumbers = input |> List.map toSingleNumbers
                                 |> List.filter hasTwoAdjacentDuplicates
+                                |> List.filter noLargerGroup
                                 |> List.filter noDecreasingNumbers
                                 
     printf "%d numbers matches criterias" matchingNumbers.Length
